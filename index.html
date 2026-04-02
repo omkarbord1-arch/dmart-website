@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>DMart Professional Store</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#f5f5f5;
+}
+
+/* LOGIN PAGE */
+#loginPage{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(green, darkgreen);
+flex-direction:column;
+color:white;
+}
+
+#loginPage input{
+padding:10px;
+margin:10px;
+width:250px;
+border:none;
+border-radius:5px;
+}
+
+#loginPage button{
+padding:10px 20px;
+background:white;
+color:green;
+border:none;
+font-weight:bold;
+cursor:pointer;
+border-radius:5px;
+}
+
+/* MAIN WEBSITE */
+#mainWebsite{
+display:none;
+}
+
+header{
+background:green;
+color:white;
+padding:20px;
+text-align:center;
+position:sticky;
+top:0;
+}
+
+header h1{
+font-size:50px;
+font-weight:bold;
+margin:0;
+}
+
+nav{
+background:#006400;
+padding:10px;
+text-align:center;
+}
+
+nav button{
+background:white;
+color:green;
+border:none;
+margin:5px;
+padding:8px 15px;
+cursor:pointer;
+border-radius:5px;
+}
+
+/* Animated Banner */
+.banner{
+height:200px;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+font-size:30px;
+font-weight:bold;
+animation:slide 5s infinite alternate;
+}
+
+@keyframes slide{
+0%{background:green;}
+100%{background:darkorange;}
+}
+
+.products{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+padding:20px;
+}
+
+.product{
+background:white;
+padding:15px;
+text-align:center;
+border-radius:10px;
+box-shadow:0 4px 8px rgba(0,0,0,0.2);
+}
+
+.product img{
+width:150px;
+height:150px;
+}
+
+button{
+background:green;
+color:white;
+padding:8px 15px;
+border:none;
+cursor:pointer;
+border-radius:5px;
+}
+
+button:hover{
+background:darkgreen;
+}
+
+#cartSection{
+background:white;
+margin:20px;
+padding:20px;
+border-radius:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage">
+<h2>DMart Login</h2>
+<input type="text" id="username" placeholder="Enter Username">
+<input type="password" id="password" placeholder="Enter Password">
+<button onclick="login()">Login</button>
+</div>
+
+<!-- MAIN WEBSITE -->
+<div id="mainWebsite">
+
+<header>
+<h1>DMart</h1>
+🛒 Cart: <span id="cartCount">0</span>
+</header>
+
+<nav>
+<button onclick="filterProduct('all')">All</button>
+<button onclick="filterProduct('grocery')">Grocery</button>
+<button onclick="filterProduct('food')">Food</button>
+<button onclick="filterProduct('stationary')">Stationary</button>
+</nav>
+
+<div class="banner">
+Lowest Prices Everyday!
+</div>
+
+<section class="products" id="productList">
+
+</section>
+
+<div id="cartSection">
+<h2>Cart Items</h2>
+<div id="cartItems"></div>
+<h3>Total: ₹<span id="total">0</span></h3>
+<button onclick="payment()">Proceed to Payment</button>
+</div>
+
+</div>
+
+<script>
+
+let products = [
+{name:"Rice",price:60,cat:"grocery",img:"https://images.unsplash.com/photo-1586201375761-83865001e31b?w=200"},
+{name:"Sugar",price:45,cat:"grocery",img:"https://images.unsplash.com/photo-1587735243615-c03f25aaff15?w=200"},
+{name:"Oil",price:120,cat:"grocery",img:"https://images.unsplash.com/photo-1604908177522-040f7c9b7f80?w=200"},
+{name:"Milk",price:30,cat:"food",img:"https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=200"},
+{name:"Chocolate",price:40,cat:"food",img:"https://images.unsplash.com/photo-1587241321921-91a834d6d191?w=200"},
+{name:"Noodles",price:30,cat:"food",img:"https://images.unsplash.com/photo-1604908812855-8cd33d4d39c4?w=200"},
+{name:"Biscuit",price:20,cat:"food",img:"https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=200"},
+{name:"Notebook",price:50,cat:"stationary",img:"https://images.unsplash.com/photo-1519681393784-d120267933ba?w=200"},
+{name:"Pen",price:10,cat:"stationary",img:"https://images.unsplash.com/photo-1583484963886-cfe2bff2945f?w=200"},
+{name:"Pencil",price:5,cat:"stationary",img:"https://images.unsplash.com/photo-1583484963886-cfe2bff2945f?w=200"}
+];
+
+let cartCount=0;
+let total=0;
+
+function displayProducts(list){
+document.getElementById("productList").innerHTML="";
+list.forEach(p=>{
+document.getElementById("productList").innerHTML+=`
+<div class="product">
+<img src="${p.img}">
+<h3>${p.name}</h3>
+<p>₹${p.price}</p>
+<button onclick="addToCart('${p.name}',${p.price})">Add</button>
+</div>`;
+});
+}
+
+displayProducts(products);
+
+function filterProduct(cat){
+if(cat=="all"){
+displayProducts(products);
+}else{
+let filtered=products.filter(p=>p.cat==cat);
+displayProducts(filtered);
+}
+}
+
+function addToCart(name,price){
+cartCount++;
+total+=price;
+document.getElementById("cartCount").innerText=cartCount;
+document.getElementById("cartItems").innerHTML+=name+" - ₹"+price+"<br>";
+document.getElementById("total").innerText=total;
+}
+
+function login(){
+document.getElementById("loginPage").style.display="none";
+document.getElementById("mainWebsite").style.display="block";
+}
+
+function payment(){
+alert("Payment Successful! Thank You for Shopping at DMart.");
+}
+
+</script>
+
+</body>
+</html>
